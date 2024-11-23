@@ -34,7 +34,7 @@
 
     <script>
         // Fetch the directory structure JSON
-        fetch('resources/Vels/English/fileList.json')
+        fetch('resources/NotesfileList.json')
             .then(response => response.json())
             .then(data => {
                 // Check if JSON is an array and extract the object
@@ -55,7 +55,7 @@
                     data[folder].forEach(file => {
                         const listItem = document.createElement('li');
                         const link = document.createElement('a');
-                        link.href = `resources/Vels/English/${folder}/${file}`;
+                        link.href = `resources/Notes${folder}/${file}`;
                         link.textContent = file;
                         link.target = '_blank'; // Open in a new tab
                         listItem.appendChild(link);
