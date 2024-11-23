@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English PDFs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 0.5rem 0;
+        }
+        a {
+            text-decoration: none;
+            color: #0066cc;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>English</h1>
+    <div id="file-list">Loading...</div>
+
+    <script>
+        // Fetch the directory structure JSON
+        fetch('resources/Vels/English/fileList.json')
+            .then(response => response.json())
+            .then(data => {
+                // Check if JSON is an array and extract the object
+                if (Array.isArray(data) && data.length > 0) {
+                    data = data[0]; // Unwrap the object from the array
+                }
+
+                const fileListDiv = document.getElementById('file-list');
+                fileListDiv.innerHTML = ''; // Clear "Loading..." text
+
+                // Loop through subfolders and files
+                for (const folder in data) {
+                    const folderTitle = document.createElement('h2');
+                    folderTitle.textContent = folder;
+                    fileListDiv.appendChild(folderTitle);
+
+                    const fileList = document.createElement('ul');
+                    data[folder].forEach(file => {
+                        const listItem = document.createElement('li');
+                        const link = document.createElement('a');
+                        link.href = `resources/Vels/English/${folder}/${file}`;
+                        link.textContent = file;
+                        link.target = '_blank'; // Open in a new tab
+                        listItem.appendChild(link);
+                        fileList.appendChild(listItem);
+                    });
+                    fileListDiv.appendChild(fileList);
+                }
+            })
+            .catch(error => {
+                document.getElementById('file-list').textContent = 'Error loading file list: ' + error;
+            });
+    </script>
+</body>
+</html>
