@@ -3,52 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English PDFs</title>
+    <title>English Notes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+            background: #000000;
+            color: #e5e5e5;
         }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
         h1 {
-            color: #333;
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #ffffff;
+            font-weight: 300;
+            letter-spacing: -0.5px;
         }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #ffffff;
+            border-bottom: 1px solid #333;
+            padding-bottom: 12px;
+            margin-top: 48px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
         ul {
-            list-style-type: none;
+            list-style: none;
             padding: 0;
+            margin: 24px 0;
         }
+
         li {
-            margin: 0.5rem 0;
+            margin: 16px 0;
         }
+
         a {
+            display: block;
+            padding: 16px 24px;
+            background: #111111;
+            color: #ffffff;
             text-decoration: none;
-            color: #0066cc;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border: 1px solid #333;
         }
+
         a:hover {
-            text-decoration: underline;
+            transform: translateY(-2px);
+            background: #1a1a1a;
+            border-color: #444;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .loading {
+            text-align: center;
+            color: #888;
+            margin: 40px 0;
+        }
+
+        /* Add styles for icons */
+        .fas {
+            margin-right: 12px;
+            opacity: 0.8;
+        }
+
+        /* Add subtle hover effect for folder icons */
+        h2 .fas {
+            transition: transform 0.2s ease;
+        }
+
+        h2:hover .fas {
+            transform: translateX(4px);
+        }
+
+        /* Style for file names */
+        a span {
+            font-size: 0.95rem;
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
-    <h1>English</h1>
-    <div id="file-list">Loading...</div>
+    <div class="container">
+        <h1>English Notes</h1>
+        <div id="file-list" class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Loading...
+        </div>
+    </div>
 
     <script>
-        // Fetch the directory structure JSON
         fetch('resources/Notes/fileList.json')
             .then(response => response.json())
             .then(data => {
-                // Check if JSON is an array and extract the object
                 if (Array.isArray(data) && data.length > 0) {
-                    data = data[0]; // Unwrap the object from the array
+                    data = data[0];
                 }
 
                 const fileListDiv = document.getElementById('file-list');
-                fileListDiv.innerHTML = ''; // Clear "Loading..." text
+                fileListDiv.innerHTML = '';
+                fileListDiv.classList.remove('loading');
 
-                // Loop through subfolders and files
                 for (const folder in data) {
                     const folderTitle = document.createElement('h2');
-                    folderTitle.textContent = folder;
+                    folderTitle.innerHTML = `<i class="fas fa-folder"></i> ${folder}`;
                     fileListDiv.appendChild(folderTitle);
 
                     const fileList = document.createElement('ul');
@@ -56,8 +126,11 @@
                         const listItem = document.createElement('li');
                         const link = document.createElement('a');
                         link.href = `resources/Notes/${folder}/${file}`;
-                        link.textContent = file;
-                        link.target = '_blank'; // Open in a new tab
+                        link.innerHTML = `
+                            <i class="fas fa-file-pdf"></i>
+                            <span>${file}</span>
+                        `;
+                        link.target = '_blank';
                         listItem.appendChild(link);
                         fileList.appendChild(listItem);
                     });
@@ -65,7 +138,13 @@
                 }
             })
             .catch(error => {
-                document.getElementById('file-list').textContent = 'Error loading file list: ' + error;
+                const fileListDiv = document.getElementById('file-list');
+                fileListDiv.innerHTML = `
+                    <div style="text-align: center; color: #ef4444; padding: 2rem;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Error loading file list: ${error}
+                    </div>
+                `;
             });
     </script>
 </body>
